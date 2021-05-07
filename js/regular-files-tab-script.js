@@ -49,10 +49,10 @@ function generateFilesTabLeftSideHTML() {
     <!-- Search File Categories Form -->
     <form class="form-inline mt-3" autocomplete="off">
       <input id="input-search-file-categories" class="form-control border-dark w-100" onkeyup="searchFileCategories()" 
-        type="text" placeholder="Search File Categories">
+        type="text" placeholder="Search Folder">
     </form>
 
-    <h5 class="my-2"><strong>File Categories</strong></h5>
+    <h5 class="my-2"><strong>Folder</strong></h5>
     
     <!-- File Categories Container -->
     <div id="file-categories-container" class="overflow-auto">
