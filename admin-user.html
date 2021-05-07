@@ -89,6 +89,12 @@
                         <i class="fa fa-ellipsis-v" style="font-size: 1.5rem;" aria-hidden="true"></i>
                       </a>
                       <div class="dropdown-menu dropdown-menu-right">
+                        <button class="dropdown-item us-none" onclick="displayUser()" type="button" data-toggle="modal" data-target="#user-viewer-modal">
+                          <i class="fa fa-user-plus" aria-hidden="true"></i>
+                          &nbsp;
+                          Add Viewer
+                        </button>
+
                         <button class="dropdown-item us-none" onclick="displayFilesToDelete()" type="button" data-toggle="modal" data-target="#delete-files-modal">
                           <i class="fa fa-remove" aria-hidden="true"></i>
                           &nbsp;
@@ -105,13 +111,13 @@
                         <button class="dropdown-item us-none" type="button" onclick="setAddFileCategoryToSubFolders()" data-toggle="modal" data-target="#add-file-category-modal">
                           <i class="fa fa-plus" aria-hidden="true"></i>
                           &nbsp;
-                          Add File Category
+                          Add File Folder
                         </button>
 
                         <button class="dropdown-item us-none" type="button" data-toggle="modal" data-target="#rename-file-category-modal">
                           <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                           &nbsp;
-                          Rename File Category
+                          Rename File Folder
                         </button>
                       </div>
                     </div>
@@ -153,7 +159,7 @@
                           <button class="dropdown-item us-none" type="button" onclick="resetRenameRecordCategoryModal(false)" data-toggle="modal" data-target="#rename-record-category-modal">
                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                             &nbsp;
-                            Rename Record Category
+                            Rename Folder
                           </button>
                         </div>
                       </div>
@@ -218,6 +224,35 @@
     </div>
   </div>
 
+  <!-- user viewer Modal -->
+  <div id="user-viewer-modal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Select User As Viewer</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Search files to delete Form -->
+          <form class="form-inline mb-3" autocomplete="off">
+            <input id="search-user-to-view-input" class="form-control border-dark w-100" onkeyup="searchUser()" 
+              type="text" placeholder="Search User">
+          </form>
+
+          <!-- File List Container -->
+          <div id="user-list-to-view-container" class="list-group">
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="user-viewer-button" type="button" class="btn btn-outline-danger">Add Viewer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Delete Files Modal -->
   <div id="delete-files-modal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -253,7 +288,7 @@
       <div class="modal-content">
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">Add File Category</h4>
+          <h4 class="modal-title">Add Folder</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
@@ -263,7 +298,7 @@
           <form id="add-file-category-form">
             <!-- File Category Name Input -->
             <div class="form-group">
-              <label>File Category Name: </label>
+              <label>File Folder Name: </label>
               <input id="file-category-name-input" type="text" class="form-control" autocomplete="off" required>
             </div>
 
@@ -324,17 +359,17 @@
             <!-- Add File Category Button Container -->
             <div id="add-file-category-button-container" class="mt-3 mb-1 text-center container">
               <!-- Add File Category Upload Input -->
-              <input id="file-to-upload-input" class="d-none" type="file" accept=".pdf, .doc, .txt, .docx, .odt, .xls, .xlsx, .ods, .ppt, .pptx">
+              <input id="file-to-upload-input" class="d-none" type="button" >
               <label id="upload-file-category-button" class="btn btn-outline-primary w-100 m-0" for="file-to-upload-input">
                 <i class="fa fa-upload" aria-hidden="true"></i>
                 &nbsp;
-                Add File Category
+                Create Folder
               </label>
             </div>
 
             <!-- Progress Bar -->
             <div id="file-category-upload-progress-container" class="mt-2 mb-1" style="display: none;">
-              <p class="text-center lead mb-2">Uploading File...</p>
+              <p class="text-center lead mb-2">Creating Folder...</p>
 
               <div class="progress">
                 <div id="file-category-upload-progress-bar" class="progress-bar" style="width: 0%;"></div>
@@ -377,7 +412,7 @@
       <div class="modal-content">
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">Rename File Category</h4>
+          <h4 class="modal-title">Rename File Folder</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
@@ -385,7 +420,7 @@
         <div class="modal-body">
           <form>
             <div class="form-group">
-              <label>New File Category Name: </label>
+              <label>New File Folder Name: </label>
               <input id="rename-file-category-input" type="text" class="form-control" autocomplete="off" required>
             </div>
 
@@ -393,7 +428,7 @@
             <button id="rename-file-category-button" type="button" class="btn btn-outline-warning w-100 my-2">
               <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
               &nbsp;
-              Rename File Category
+              Rename File Folder
             </button>
           </form>
         </div>
@@ -407,7 +442,7 @@
       <div class="modal-content">
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">Add Record Category</h4>
+          <h4 class="modal-title">Add Record Folder</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
@@ -415,7 +450,7 @@
         <div class="modal-body">
           <form id="add-record-category-form">
             <div class="form-group">
-              <label>Record Category Name: </label>
+              <label>Record Folder Name: </label>
               <input id="record-category-name-input" type="text" class="form-control" autocomplete="off" required>
             </div>
 
@@ -429,7 +464,7 @@
             <button id="add-record-category-button" type="button" class="btn btn-outline-primary w-100 my-2">
               <i class="fa fa-plus" aria-hidden="true"></i>
               &nbsp;
-              Add Record Category
+              Add Record Folder
             </button>
           </form>
         </div>
