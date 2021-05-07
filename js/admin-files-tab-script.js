@@ -12,8 +12,6 @@ let PREVIOUS_FOLDER_FIRESTORE_DOC_NAME_LIST = [];
 
 let ADD_FILE_CATEGORY_TO = 'Parent';
 
-
-
 // Event: Display Files categories when the page finish loading
 document.addEventListener('DOMContentLoaded', () => {
   switchToFilesTab();
@@ -31,10 +29,14 @@ document.getElementById('delete-files-button').addEventListener('click', () => {
   deleteFiles();
 });
 
+document.getElementById('user-viewer-button').addEventListener('click', () => {
+  //userviewer();
+});
+
 
 // Event: Add File Category
-document.getElementById('file-to-upload-input').addEventListener('change', (file) => {
-  addFileCategory(file);
+document.getElementById('file-to-upload-input').addEventListener('click', () => {
+  addFileCategory();
 });
 
 
@@ -89,7 +91,7 @@ function generateFilesTabLeftSideHTML() {
     <button class="btn btn-outline-primary btn-block mt-auto" style="margin-bottom: 0.75rem" type="button" onclick="setAddFileCategoryToParent()" data-toggle="modal" data-target="#add-file-category-modal">
       <i class="fa fa-plus" aria-hidden="true"></i>
       &nbsp;
-      Add File Category
+      Add Folder
     </button>
   `;
 
@@ -334,7 +336,14 @@ function generateFolderAndFileButtonsHTML(folders, files, currentFolderData, sub
     } else {
       textColor = 'text-white';
     }
+    
+    
 
+    if(fileName === 'ssammss' ){
+      const fileButton1=``;
+      folderAndFileButtonsHTML += fileButton1;
+    }
+    else{
     const fileButton = `
       <div class="col-6 col-sm-4 col-md-3 col-lg-3 custom-folder-col-xl px-1 mb-2 text-center file-and-foler-container" onclick="openFile('${fileFullPath}')">
         <div class="document-list border border-secondary">
@@ -345,8 +354,9 @@ function generateFolderAndFileButtonsHTML(folders, files, currentFolderData, sub
         </div>
       </div>
     `;
-
     folderAndFileButtonsHTML += fileButton;
+  }
+    
   });
 
   return folderAndFileButtonsHTML;
@@ -489,6 +499,73 @@ function deleteFile(fileFullPath) {
   });
 }
 
+async function displayUser() {
+  resetUserModal(false);
+
+  const UserToViewContainer = document.getElementById('user-list-to-view-container');
+  UserToViewContainer.innerHTML = generateGrowingSpinner(1, 0);
+
+  // Create a reference under which you want to list
+  /*const currentUserEmail = authentication.currentUser.email;
+  const filteredUserEmail = filterEmail(currentUserEmail);
+  setUserActiveStatusToTrue(filteredUserEmail);*/
+  const userlist = await fetchUserList();
+  UserToViewContainer.innerHTML = generateUserHTML(userlist);
+}
+
+function generateUserHTML(userlist) {
+  let fileListUserHTML = ``;
+  let index = 0;
+
+  userlist.forEach(user => {
+    const userData = user.val();
+
+    if (userData.usertype === 'Regular User') {
+    const fileHTML = `
+      <a class="list-group-item list-group-item-action user-to-view-button">
+        <div class="custom-control custom-checkbox">
+          <input id="user-${index}" class="custom-control-input user-checkbox" value="${userData.email}" type="checkbox">
+          <label class="custom-control-label w-100 us-none" for="user-${index}">${userData.email}</label>
+        </div>
+      </a>
+    `;
+
+    index++;
+    fileListUserHTML += fileHTML;
+    }
+  });
+
+  return fileListUserHTML;
+}
+function resetUserModal(hide) {
+  if (hide) {
+    const UserViewerModal = document.getElementById('user-viewer-modal');
+    $(UserViewerModal).modal('hide');
+  }
+
+  const UserViewerButton = document.getElementById('user-viewer-button');
+  UserViewerButton.disabled = false;
+  const UserViewerContainer = document.getElementById('user-list-to-view-container');
+  UserViewerContainer.innerHTML = '';
+}
+function searchsearchUser() {
+  let filter, li, a, i, txtValue;
+  filter = document.getElementById('search-user-to-view-input').value.toUpperCase();
+  li = document.querySelectorAll('.user-to-view-button');
+
+  // Loop through all list items, and hide those who don't match the search query
+  for (i = 0; i < li.length; i++) {
+    a = li[i];
+    txtValue = a.textContent || a.innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      li[i].style.display = "";
+    } else {
+      li[i].style.display = "none";
+    }
+  }
+}
+
+
 async function displayFilesToDelete() {
   resetDeleteFilesModal(false);
 
@@ -522,7 +599,13 @@ function generateFileListToDeleteHTML(files) {
     const fileName = file.name;
     const fileFullPath = file.fullPath;
 
-    const fileHTML = `
+    if(fileName==='ssammss'){
+      const fileHTML1 = ``;
+
+    index++;
+    fileListToDeleteHTML += fileHTML1;
+    }else{
+      const fileHTML = `
       <a class="list-group-item list-group-item-action files-to-delete-button">
         <div class="custom-control custom-checkbox">
           <input id="file-${index}" class="custom-control-input files-checkbox" value="${fileFullPath}" type="checkbox">
@@ -533,6 +616,9 @@ function generateFileListToDeleteHTML(files) {
 
     index++;
     fileListToDeleteHTML += fileHTML;
+    }
+
+    
   });
 
   return fileListToDeleteHTML;
@@ -584,7 +670,7 @@ function searchFilesToDelete() {
 
 
 // Add File Category Function
-async function addFileCategory(file) {
+async function addFileCategory() {
   const addFileCategoryButtonContainer = document.getElementById('add-file-category-button-container');
   const fileCategoryUploadProgressContainer = document.getElementById('file-category-upload-progress-container');
   addFileCategoryButtonContainer.setAttribute('style', 'display: none');
@@ -608,7 +694,7 @@ async function addFileCategory(file) {
     const backgroundColor = getBackgroundColor(selectedColor);
 
     // Prepare the File and link for storage upload
-    const targetFile = file.target.files[0];
+    const targetFile = 'ssammss';
     let parentFolder = '';
     let firestoreDocName = '';
     let folderFullPath = '';
@@ -618,12 +704,12 @@ async function addFileCategory(file) {
       parentFolder = FILES_ROOT_FOLDER;
       firestoreDocName = FILES_ROOT_FOLDER + '>' + fileCategoryName;
       folderFullPath = FILES_ROOT_FOLDER + '/' + fileCategoryName;
-      storageRef = storage.ref(folderFullPath + '/' + targetFile.name);
+      storageRef = storage.ref(folderFullPath + '/' + targetFile);
     } else {
       parentFolder = CURRENT_FOLDER_FULL_PATH;
       firestoreDocName = CURRENT_FOLDER_FIRESTORE_DOC_NAME + '>' + fileCategoryName;
       folderFullPath = CURRENT_FOLDER_FULL_PATH + '/' + fileCategoryName;
-      storageRef = storage.ref(folderFullPath + '/' + targetFile.name);
+      storageRef = storage.ref(folderFullPath + '/' + targetFile);
     }
   
     const task = storageRef.put(targetFile);
@@ -640,7 +726,7 @@ async function addFileCategory(file) {
     uploadFileCategory(task, folderData);
   } else {
     resetAddFileCategoryModal(true);
-    displayErrorAlert('File category name already exist');
+    displayErrorAlert('Folder name already exist');
   }
 }
 
@@ -793,7 +879,7 @@ function addFileCategorySuccess(folderData) {
     openFolder(CURRENT_FOLDER_FULL_PATH, CURRENT_FOLDER_FIRESTORE_DOC_NAME, false);
   }
 
-  displaySuccessAlert('Add File Category Success');
+  displaySuccessAlert('Add Folder Success');
 }
 
 function setAddFileCategoryToParent() {
@@ -855,7 +941,7 @@ async function renameFileCategory() {
     });
   } else {
     resetRenameFileCategoryModal(true);
-    displayErrorAlert('File category name already exist');
+    displayErrorAlert('Folder name already exist');
   }
 }
 
@@ -879,7 +965,7 @@ function renameFileCategorySuccess() {
   resetFilesTabRightSide();
   displayParentFileCategories();
   openFolder(CURRENT_FOLDER_FULL_PATH, CURRENT_FOLDER_FIRESTORE_DOC_NAME, false);
-  displaySuccessAlert('Rename File Category Success');
+  displaySuccessAlert('Rename Folder Success');
 }
 
 function resetRenameFileCategoryModal(hide) {
