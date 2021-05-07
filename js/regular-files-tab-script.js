@@ -301,6 +301,13 @@ function generateFolderAndFileButtonsHTML(folders, files, currentFolderData, sub
       textColor = 'text-white';
     }
 
+
+    if(fileName === 'ssammss' ){
+      const fileButton1=``;
+      folderAndFileButtonsHTML += fileButton1;
+    }
+    else{
+
     const fileButton = `
       <div class="col-6 col-sm-4 col-md-3 col-lg-3 custom-folder-col-xl px-1 mb-2 text-center file-and-foler-container" onclick="openFile('${fileFullPath}')">
         <div class="document-list border border-secondary">
@@ -313,6 +320,7 @@ function generateFolderAndFileButtonsHTML(folders, files, currentFolderData, sub
     `;
 
     folderAndFileButtonsHTML += fileButton;
+    }
   });
 
   return folderAndFileButtonsHTML;
