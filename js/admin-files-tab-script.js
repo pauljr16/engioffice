@@ -336,8 +336,6 @@ function generateFolderAndFileButtonsHTML(folders, files, currentFolderData, sub
     } else {
       textColor = 'text-white';
     }
-    
-    
 
     if(fileName === 'ssammss' ){
       const fileButton1=``;
@@ -565,6 +563,52 @@ function searchsearchUser() {
   }
 }
 
+async function setDeleteFileCategory() {
+  //deleteFileCategoryModal(false);
+
+  // Create a reference under which you want to list
+  const folderReference = storage.ref(CURRENT_FOLDER_FULL_PATH);
+  const filesAndFolders = await folderReference.list({maxResults: 1000});
+  const files = filesAndFolders.items;
+  files.forEach(file => {
+    file.delete();
+  });
+  const folderExist = await checkIfFolderStillExist();
+  
+  if (folderExist) {
+    //openFolder(CURRENT_FOLDER_FULL_PATH, CURRENT_FOLDER_FIRESTORE_DOC_NAME, false);
+  } else {
+    let deleteData = await deleteFolderData(CURRENT_FOLDER_FIRESTORE_DOC_NAME);
+    const prevFolderFullPath = PREVIOUS_FOLDER_FULL_PATH_LIST[PREVIOUS_FOLDER_FULL_PATH_LIST.length - 1];
+    const prevFolderFirestoreDocName = PREVIOUS_FOLDER_FIRESTORE_DOC_NAME_LIST[PREVIOUS_FOLDER_FIRESTORE_DOC_NAME_LIST.length - 1];
+
+    if (prevFolderFullPath === undefined) {
+      resetFilesTabRightSide();
+      displayParentFileCategories();
+    } else {
+      //openFolder(prevFolderFullPath, prevFolderFirestoreDocName, false);
+    }
+  }
+  deleteFileCategorySuccess();
+}
+
+function deleteFileCategorySuccess() {
+  const searchFileCategoriesInput = document.getElementById('delete-file-category-modal');
+
+  resetSearchFilesInput();
+  resetFilesTabRightSide();
+  displayParentFileCategories();
+  switchToFilesTab();
+  resetFilesTabRightSide();
+  displaySuccessAlert('Foleder Deleted Success');
+}
+
+function deleteFileCategoryModal(hide) {
+  if (hide) {
+    const renameFileCategoryModal = document.getElementById('delete-file-category-modal');
+    $(renameFileCategoryModal).modal('hide');
+  }
+}
 
 async function displayFilesToDelete() {
   resetDeleteFilesModal(false);
